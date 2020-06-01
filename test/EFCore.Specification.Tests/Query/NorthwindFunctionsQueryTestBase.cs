@@ -18,7 +18,7 @@ using Xunit;
 // ReSharper disable CompareOfFloatsByEqualityOperator
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 // ReSharper disable SpecifyACultureInStringConversionExplicitly
-#pragma warning disable RCS1215 // Expression is always equal to true/false. 
+#pragma warning disable RCS1215 // Expression is always equal to true/false.
 #pragma warning disable RCS1155 // Use StringComparison when comparing strings.
 namespace Microsoft.EntityFrameworkCore.Query
 {
@@ -155,6 +155,16 @@ namespace Microsoft.EntityFrameworkCore.Query
                 async,
                 ss => ss.Set<Customer>().Where(c => c.ContactName.FirstOrDefault() == 'A'),
                 entryCount: 10);
+        }
+
+        [ConditionalTheory]
+        [MemberData(nameof(IsAsyncData))]
+        public virtual Task String_Contains_Parameter_with_whitespace(bool async)
+        {
+            var pattern = "     ";
+            return AssertQuery(
+                async,
+                ss => ss.Set<Customer>().Where(c => c.ContactName.Contains(pattern)));
         }
 
         [ConditionalTheory]
